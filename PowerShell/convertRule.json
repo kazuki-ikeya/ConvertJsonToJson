@@ -1,0 +1,48 @@
+﻿{
+    "Items": [
+        {
+            "Key":"TableName",
+            "NewKey":"TableNamePascal",
+            "StringCase":"PascalCase"
+        },
+        {
+            "Key":"entities.LogicalName",
+            "NewKey":"LogicalNamePascal",
+            "StringCase":"PascalCase"
+        },
+        {
+            "Key":"entities.LogicalName",
+            "NewKey":"LogicalNameCamel",
+            "StringCase":"CamelCase"
+        },
+        {
+            "Key":"entities.IsPrimary",
+            "ConvertPairs":{
+                "Y": true
+            },
+            "NullValue": false
+        },
+        {
+            "Key":"entities.Type",
+            "NewKey":"TypeName",
+            "ConvertPairs":{
+                "VARCHAR": "string",
+                "INTEGER": "integer",
+                "TIMESTAMP": "datetime",
+                "BOOL": "boolean"
+            }
+        },
+        {
+            "Key":"header.PhysicalName",
+            "ReplacePairs":{
+                "[`s　]": ""
+            }
+        },
+        {
+            "Key":"header.LogicalName",
+            "ReplacePairs":{
+                "[`s　]": ""
+            }
+        }
+    ]
+}
