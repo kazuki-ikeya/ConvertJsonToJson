@@ -1,0 +1,231 @@
+Itemsの配列に、加工ルールを設定することで行われます
+
+
+■Key（必須）
+対象のJsonのキー情報です。
+階層が深い場合、「.」で繋ぎます。
+
+例1：Objectの場合
+{
+	"user": {
+		"name": "田中　太郎"
+	}
+}
+の場合、以下のように指定する
+{
+	"Key": "user.name"
+}
+
+例2：配列の場合
+{
+	"users": [
+		{
+			"name": "田中　太郎"
+		},
+		{
+			"name": "山田次郎"
+		},
+	]
+}
+の場合、以下のように指定する
+{
+	"Key": "users.name"
+}
+
+
+■NewKey
+加工後の結果を別名にする場合に使用します
+
+例1：Objectの場合
+{
+	"user": {
+		"name": "田中　太郎"
+	}
+}
+の場合、以下のように指定する
+{
+	"Key": "users.name",
+	"NewKey": "nameAfter",
+}
+出力結果は以下になる
+
+{
+	"user": {
+		"name": "田中　太郎",
+		"nameAfter": "田中　太郎"
+	}
+}
+
+
+■NullValue
+null、空文字、項目なしの場合に変換されます
+
+例
+{
+	"users": [
+		{
+			"name": "田中　太郎",
+			"tel": "05012345678"
+		},
+		{
+			"name": "山田　次郎",
+			"tel": ""
+		}
+	]
+}
+
+の場合、以下のように指定する
+{
+	"Key": "users.tel",
+	"NullValue": "未設定"
+}
+
+出力結果は以下になる
+{
+	"users": [
+		{
+			"name": "田中　太郎",
+			"tel": "05012345678"
+		},
+		{
+			"name": ""山田　次郎,
+			"tel": "未設定"
+		}
+	]
+}
+
+
+■StringCase
+snakecase、camelcase、pascalcase、kebabcaseが設定可能
+それぞれ対応した書式に変換されます
+
+例
+{
+	"table": {
+		"name": "m_test"
+	}
+}
+の場合、以下のように指定する
+{
+	"Key": "table.name",
+	"NewKey": "namePascal",
+	"StringCase": "pascalcase"
+}
+出力結果は以下になる
+{
+	"table": {
+		"name": "m_test",
+		"namePascal": "MTest"
+	}
+}
+
+
+■ToUpper/ToLower
+それぞれtrueを設定すると、文字列を変換します
+例
+{
+	"table": {
+		"name": "m_test"
+	}
+}
+の場合、以下のように指定する
+{
+	"Key": "table.name",
+	"NewKey": "nameUpper",
+	"ToUpper": true
+}
+出力結果は以下になる
+{
+	"table": {
+		"name": "m_test",
+		"nameUpper": "M_TEST"
+	}
+}
+
+
+■ConvertPairs/ConvertPairsElse
+特定の値を別の値に変換します
+
+例
+{
+	"users": [
+		{
+			"name": "田中　太郎",
+			"era": "H"
+		},
+		{
+			"name": "山田　次郎",
+			"era": "A"
+		}
+	]
+}
+
+の場合、以下のように指定する
+{
+	"Key": "users.era",
+	"NewKey": "eraName",
+	"ConvertPairs": {
+		"M": "明治",
+		"S": "昭和",
+		"H": "平成",
+		"R": "令和"
+	},
+	"ConvertPairsElse": "不明"
+}
+出力結果は以下になる
+{
+	"users": [
+		{
+			"name": "田中　太郎",
+			"era": "H",
+			"eraName": "平成"
+		},
+		{
+			"name": "山田　次郎",
+			"era": "A",
+			"eraName": "不明"
+		}
+	]
+}
+
+ConvertPairsElseを設定しなかった場合、変換されません。
+
+
+■ReplacePairs
+特定の値を別の値に文字置換します（正規表現固定）
+PowerShellの正規表現が使用されます。
+
+例
+{
+	"users": [
+		{
+			"name": "田中　太郎"
+		},
+		{
+			"name": "山田　次郎"
+		}
+	]
+}
+
+の場合、以下のように指定する
+{
+	"Key": "users.name",
+	"ReplacePairs": {
+		"[\\s]": ""
+	}
+}
+出力結果は以下になる
+{
+	"users": [
+		{
+			"name": "田中太郎"
+		},
+		{
+			"name": "山田次郎"
+		}
+	]
+}
+
+jsonデータの都合上、「\s」でスペースを指定したい場合は「\\s」のようにエスケープした値を設定する必要があります
+
+

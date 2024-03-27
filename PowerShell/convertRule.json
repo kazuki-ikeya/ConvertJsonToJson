@@ -6,42 +6,48 @@
             "StringCase":"PascalCase"
         },
         {
-            "Key":"entities.LogicalName",
+            "Key":"Entities.LogicalName",
             "NewKey":"LogicalNamePascal",
             "StringCase":"PascalCase"
         },
         {
-            "Key":"entities.LogicalName",
+            "Key":"Entities.LogicalName",
             "NewKey":"LogicalNameCamel",
             "StringCase":"CamelCase"
         },
         {
-            "Key":"entities.IsPrimary",
+            "Key":"Entities.LogicalName",
+            "NewKey":"LogicalNameUpper",
+            "ToUpper":true
+        },
+        {
+            "Key":"Entities.IsPrimary",
             "ConvertPairs":{
                 "Y": true
             },
-            "NullValue": false
+            "ConvertPairsElse": false
         },
         {
-            "Key":"entities.Type",
+            "Key":"Entities.Type",
             "NewKey":"TypeName",
             "ConvertPairs":{
                 "VARCHAR": "string",
                 "INTEGER": "integer",
+                "DATE": "datetime",
                 "TIMESTAMP": "datetime",
-                "BOOL": "boolean"
+                "BOOL": "bool"
             }
         },
         {
-            "Key":"header.PhysicalName",
+            "Key":"Header.PhysicalName",
             "ReplacePairs":{
-                "[`s　]": ""
+                "[\\s]": ""
             }
         },
         {
-            "Key":"header.LogicalName",
+            "Key":"Header.LogicalName",
             "ReplacePairs":{
-                "[`s　]": ""
+                "[\\s]": ""
             }
         }
     ]

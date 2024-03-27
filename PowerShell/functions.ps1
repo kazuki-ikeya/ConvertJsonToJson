@@ -45,6 +45,8 @@ function ConvertJsonToJsonSubItem([ref]$convertedTarget, $key, $value, $convertR
     if ($null -ne $convertRoleItem.ConvertPairs){
         if ($null -ne $convertRoleItem.ConvertPairs.$value){
             $value = $convertRoleItem.ConvertPairs.$value
+        } elseif ($null -ne $convertRoleItem.ConvertPairsElse){
+            $value = $convertRoleItem.ConvertPairsElse
         }
     }
     # 文字置換
@@ -55,13 +57,21 @@ function ConvertJsonToJsonSubItem([ref]$convertedTarget, $key, $value, $convertR
             $value = $value -replace $replaceKey, $replaceValue
         }
     }
-    # 空判定
-    if ($null -ne $convertRoleItem.NullValue -and ($value -eq "" -or $value -eq $null)){
-        $value = $convertRoleItem.NullValue
-    }
     # 文字列形式
     if ($null -ne $convertRoleItem.StringCase){
         $value = ConvertToCase $value $convertRoleItem.StringCase
+    }
+    # 文字列Upper形式
+    if ($null -ne $convertRoleItem.ToUpper -and $convertRoleItem.ToUpper){
+        $value = $value.ToUpper()
+    }
+    # 文字列Lower形式
+    if ($null -ne $convertRoleItem.ToLower -and $convertRoleItem.ToLower){
+        $value = $value.ToLower()
+    }
+    # 空判定
+    if ($null -ne $convertRoleItem.NullValue -and ($value -eq "" -or $value -eq $null)){
+        $value = $convertRoleItem.NullValue
     }
     # 結果格納
     $newKey = $key
@@ -74,6 +84,7 @@ function ConvertJsonToJsonSubItem([ref]$convertedTarget, $key, $value, $convertR
     $convertedTarget.Value.$newKey = $value
 }
 
+# 文字列形式変換
 function ConvertToCase([string]$text, [string]$case){
     if ($case.ToLower() -eq "snakecase"){
         return ConvertToSnakeCase $text
@@ -81,11 +92,24 @@ function ConvertToCase([string]$text, [string]$case){
         return ConvertToPascalCase $text
     } elseif ($case.ToLower() -eq "camelcase"){
         return ConvertToCamelCase $text
+    } elseif ($case.ToLower() -eq "kebabcase" -or $case.ToLower() -eq "dashcase" ){
+        return ConvertToKebabCase $text
     } else {
         return $text
     }
 }
 
+# kebab-case形式に変換する関数
+function ConvertToKebabCase([string]$text) {
+    if ($text -eq ""){
+        return ""
+    }
+    if ($text -match "[_-]") {
+        return $text -replace "[_-]", "-"
+    }
+    $dashCase = [System.Text.RegularExpressions.Regex]::Replace($text, "(?<!^)(?=[A-Z])", "-$&").ToLower()
+    return $dashCase.ToLower()
+}
 
 # snake_case形式に変換する関数
 function ConvertToSnakeCase([string]$text) {
